@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2/promise');
-
+const url = require('url');
 const PORT = 3000;
 
 // Database connection settings
@@ -28,6 +28,9 @@ async function getHtmlRows() {
     <tr>
       <td>${index + 1}</td>
       <td>${item.text}</td>
+      <td>
+        <button onclick="deleteItem(${item.id})">Delete</button>
+      </td>
     </tr>
   `).join('');
 }
@@ -56,8 +59,6 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, item: result }));
     });
-  
-
   } else if (req.method === 'GET') {
     const filePath = path.join(__dirname, parsedUrl.pathname);
     if (fs.existsSync(filePath)) {
