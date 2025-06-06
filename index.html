@@ -51,6 +51,7 @@
         <tr>
             <th>#</th>
             <th>Task</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody id="listBody">
@@ -73,6 +74,23 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
+        }).then(() => location.reload());
+    }
+
+    function deleteItem(id) {
+        fetch(`/delete-item/${id}`, {
+            method: 'DELETE'
+        }).then(() => location.reload());
+    }
+
+    function editItem(id) {
+        const newText = prompt('Введите новое название задачи:');
+        if (!newText || newText.trim() === '') return;
+
+        fetch(`/edit-item/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: newText.trim() })
         }).then(() => location.reload());
     }
 </script>
