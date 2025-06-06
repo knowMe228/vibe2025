@@ -49,9 +49,8 @@
 <table id="todoList">
     <thead>
         <tr>
-            <th>Number</th>
-            <th>Text</th>
-            <th>Action</th>
+            <th>#</th>
+            <th>Task</th>
         </tr>
     </thead>
     <tbody id="listBody">
@@ -65,38 +64,16 @@
 </div>
 
 <script>
-    let items = [];
-    let nextId = 1;
-
-    function renderList() {
-        const listBody = document.getElementById('listBody');
-        listBody.innerHTML = '';
-
-        items.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${item.text}</td>
-                <td><button onclick="removeItem(${index})">Remove</button></td>
-            `;
-            listBody.appendChild(row);
-        });
-    }
-
     function addItem() {
-        const newItemInput = document.getElementById('newItem');
-        const newItemText = newItemInput.value.trim();
+        const input = document.getElementById('newItem');
+        const text = input.value.trim();
+        if (!text) return;
 
-        if (newItemText) {
-            items.push({ id: nextId++, text: newItemText });
-            newItemInput.value = '';
-            renderList();
-        }
-    }
-
-    function removeItem(index) {
-        items.splice(index, 1);
-        renderList();
+        fetch('/add-item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+        }).then(() => location.reload());
     }
 </script>
 
